@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>2_类式组件</title>
+    <title>state</title>
 </head>
 
 <body>
@@ -27,11 +27,32 @@
                 this.state = {isHot:true}
             }
             render(){
-                return <h1>今天天气很{this.state.isHot ? '炎热' : '凉爽'}</h1>
+                return <h1 id="title" onClick={this.changeWeather()}>今天天气很{this.state.isHot ? '炎热' : '凉爽'}</h1>
+            }
+            changeWeather(){
+                //changeWeather放在哪里？ Weather的原型对象上，供实例调用
+                //由于changeWeather是作为onCilck的回调，所以不是实例调用的，是直接调用。
+                //类中的方法默认开启了局部的严格模式，所以changeWeather中的this为undefined
+                console.log(this)
             }
         }
         // 2.渲染组件页面
         ReactDOM.render(<Weather/>,document.getElementById('test'))
+
+        
+        // const title = document.getElementById('title') 
+        // title.onclick = () => {
+        //     console.log('标题被点击了')
+        // }
+
+        // const title = document.getElementById('title') 
+        // title.addEventListener('click',()=>{
+        //     console.log('标题被点击了')
+        // })
+
+        // function demo(){
+        //     console.log('标题被点击了')
+        // }
     </script>
    
 </body>
