@@ -25,15 +25,23 @@
             constructor(props){
                 super(props)
                 this.state = {isHot:true}
+                // this指向问题
+                this.changeWeather = this.changeWeather.bind(this);
             }
             render(){
-                return <h1 id="title" onClick={this.changeWeather()}>今天天气很{this.state.isHot ? '炎热' : '凉爽'}</h1>
+                return <h1 onClick={this.changeWeather}>今天天气很{this.state.isHot ? '炎热' : '凉爽'}</h1>
             }
             changeWeather(){
-                //changeWeather放在哪里？ Weather的原型对象上，供实例调用
-                //由于changeWeather是作为onCilck的回调，所以不是实例调用的，是直接调用。
-                //类中的方法默认开启了局部的严格模式，所以changeWeather中的this为undefined
-                console.log(this)
+                // changeWeather放在哪里？ Weather的原型对象上，供实例调用
+                // 由于changeWeather是作为onCilck的回调，所以不是实例调用的，是直接调用。
+                // 类中的方法默认开启了局部的严格模式，所以changeWeather中的this为undefined
+                
+                const isHot = this.state.isHot;
+                // 状态必须通过setState进行更新，且更新是一种合并，不是替换。
+                this.setState({isHot:!isHot})
+
+                // 注意！！状态不可直接更改,下面这行就是直接更改。
+                // this.state.isHot = !isHot;
             }
         }
         // 2.渲染组件页面
