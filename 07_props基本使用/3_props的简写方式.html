@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>props基本使用</title>
+    <title>3_props的简写方式</title>
 </head>
 
 <body>
@@ -28,8 +28,18 @@
     <script type="text/babel">
         // 创建组件
         class Person extends React.Component {
+
+            constructor(props){
+                // 构造器是否接收props，是否传递给super，取决于：是否希望在构造器中通过this访问props
+                // console.log(props);
+                super(props)
+                console.log('constructor',this.props)
+            }
+
             render() {
                 const { name, age, sex } = this.props
+                // props 是只读的
+                // this.props.name = 'jack' // 此行代码会报错，因为props是只读的。
                 return (
                     <ul>
                         <li>姓名：{name}</li>
@@ -38,14 +48,25 @@
                     </ul>
                 )
             }
-        }
 
+            // 对标签属性进行类型、必要性限制
+            static propTypes = {
+                name: PropTypes.string.isRequired,
+                sex: PropTypes.string,
+                speak: PropTypes.func
+            }
+
+            // 指定默认标签属性值
+            static defaultProps = {
+                sex: '未知'
+            }
+        }
 
         const p = { name: "tom", age: 18, sex: "男" }
 
         ReactDOM.render(<Person {...p} />, document.getElementById('test1'))
-        ReactDOM.render(<Person name = "tom" age = "19" speak = {speak}/>,document.getElementById('test'))
-        function speak(){
+        ReactDOM.render(<Person name="tom" age="19" speak={speak} />, document.getElementById('test'))
+        function speak() {
             console.log("说话了")
         }
     </script>
