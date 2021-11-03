@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>4_函数式组件使用props</title>
+</head>
+
+<body>
+    <!-- 准备好一个容器 -->
+    <div id="test"></div>
+
+    <!-- 准备好一个容器 -->
+    <div id="test1"></div>
+
+    <!-- 引入react核心库 -->
+    <script type="text/javascript" src="../js/react.development.js"></script>
+
+    <!-- 引入react-dom 用于支持react操作dom -->
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+
+    <!-- 引入babale 用于将jsx转为js -->
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+
+    <!-- 引入prop-types,用于对组件标签属性进行限制 -->
+    <script type="text/javascript" src="../js/prop-types.js"></script>
+
+    <script type="text/babel">
+    
+        function Person(props) {
+            const { name, age, sex } = props;
+            return (
+                <ul>
+                    <li>姓名：{name}</li>
+                    <li>性别：{sex}</li>
+                    <li>年龄：{age}</li>
+                </ul>
+            )
+        }
+
+        // 对标签属性进行类型、必要性限制
+        Person.propTypes = {
+            name: PropTypes.string.isRequired,
+            sex: PropTypes.string,
+            age: PropTypes.number
+        }
+
+        // 指定默认标签属性值
+        Person.defaultProps = {
+            sex: '未知'
+        }
+
+        ReactDOM.render(<Person name="jerry" sex="女" age={18} />, document.getElementById('test1'))
+    </script>
+
+</body>
+
+</html>
