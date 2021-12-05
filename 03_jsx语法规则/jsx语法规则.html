@@ -2,62 +2,62 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>jsx语法规则</title>
-    <style>
-        .title {
-            background-color: gold;
-            width: 200px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>jsx语法规则</title>
+  <style>
+    .title {
+      background-color: gold;
+      width: 200px;
+    }
+  </style>
 </head>
 
 <body>
-    <!-- 准备好一个容器 -->
-    <div id="test"></div>
-    <div id="demo"></div>
+<!-- 准备好一个容器 -->
+<div id="test"></div>
+<div id="demo"></div>
 
-    <!-- 引入react核心库 -->
-    <script type="text/javascript" src="../js/react.development.js"></script>
+<!-- 引入react核心库 -->
+<script type="text/javascript" src="../js/react.development.js"></script>
 
-    <!-- 引入react-dom 用于支持react操作dom -->
-    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+<!-- 引入react-dom 用于支持react操作dom -->
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
 
-    <!-- 引入babale 用于将jsx转为js -->
-    <script type="text/javascript" src="../js/babel.min.js"></script>
+<!-- 引入babel 用于将jsx转为js -->
+<script type="text/javascript" src="../js/babel.min.js"></script>
 
-    <script type="text/babel">/* 此处一定要写babel */
-        const myId = 'helloReact';
-        const myData = "hello react";
+<script type="text/babel">/* 此处一定要写babel */
+const myId = 'helloReact';
+const myData = "hello react";
 
-        // 1.创建虚拟DOM
-        const VDOM = (
-            <div>
-                <h2 className='title' id={myId}>
-                    <span style={{ color: 'white', fontSize: '29px' }}>{myData}</span>
-                </h2>
-                <input type="text" />
-                <Good></Good>
-            </div>
-        ) /* 此处一定不要写引号，因为不是字符串 */
-        // 2.渲染虚拟DOM到页面
-        ReactDOM.render(VDOM, document.getElementById('test'))
+// 1.创建虚拟DOM
+const VDOM = (
+  <div>
+    <h2 className='title' id={myId}>
+      <span style={{color: 'white', fontSize: '29px'}}>{myData}</span>
+    </h2>
+    <input type="text"/>
+    <Good></Good>
+  </div>
+) /* 此处一定不要写引号，因为不是字符串 */
+// 2.渲染虚拟DOM到页面
+ReactDOM.render(VDOM, document.getElementById('test'))
 
-        /*
-            jsx语法规则：
-                1.定义虚拟DOM时，不要写引号。
-                2.标签中混入JS表达式时要用{}。
-                3.样式的类名指定不要用class，要用className。
-                4.内联样式，要用style={{key:value}}的形式去写。
-                5.虚拟DOM只有一个根标签。
-                6.标签必须闭合。
-                7.标签首字母
-                    （1），小写字母开头，则将该标签转为html中同名元素，
-                        若html中无该标签无对应的同名元素，则报错。
-                    （2），大写字母开头，react就去渲染对应的组件，
-                        若组件没有定义，则报错
-        */
-    </script>
+/*
+    jsx语法规则：
+        1.定义虚拟DOM时，不要写引号。
+        2.标签中混入JS表达式时要用{}。
+        3.样式的类名指定不要用class，要用className。
+        4.内联样式，要用style={{key:value}}的形式去写。
+        5.虚拟DOM只有一个根标签。
+        6.标签必须闭合。
+        7.标签首字母
+            （1），小写字母开头，则将该标签转为html中同名元素，
+                若html中无该标签无对应的同名元素，则报错。
+            （2），大写字母开头，react就去渲染对应的组件，
+                若组件没有定义，则报错
+*/
+</script>
 
 </body>
 

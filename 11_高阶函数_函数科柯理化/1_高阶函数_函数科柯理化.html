@@ -2,67 +2,68 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>1_高阶函数_函数科柯理化</title>
+  <meta charset="UTF-8">
+  <title>1_高阶函数_函数科柯理化</title>
 </head>
 
 <body>
-    <!-- 准备好一个容器 -->
-    <div id="test"></div>
+<!-- 准备好一个容器 -->
+<div id="test"></div>
 
-    <!-- 引入react核心库 -->
-    <script type="text/javascript" src="../js/react.development.js"></script>
+<!-- 引入react核心库 -->
+<script type="text/javascript" src="../js/react.development.js"></script>
 
-    <!-- 引入react-dom 用于支持react操作dom -->
-    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+<!-- 引入react-dom 用于支持react操作dom -->
+<script type="text/javascript" src="../js/react-dom.development.js"></script>
 
-    <!-- 引入babale 用于将jsx转为js -->
-    <script type="text/javascript" src="../js/babel.min.js"></script>
+<!-- 引入babel 用于将jsx转为js -->
+<script type="text/javascript" src="../js/babel.min.js"></script>
 
-    <script type="text/babel">
-        /* 高阶函数：如果一个函数符合下面2个规范中的任何一个，那该函数就是高阶函数。
-                1.若A函数，接收的参数是一个函数，那么A就可以称之为高阶函数
-                2.若A函数，调用的返回值依然是一个函数，那么A就可以称之为高阶函数。
-                常见的高阶函数： Promise、setTimeout、arr.map()等等
+<script type="text/babel">
+  /* 高阶函数：如果一个函数符合下面2个规范中的任何一个，那该函数就是高阶函数。
+          1.若A函数，接收的参数是一个函数，那么A就可以称之为高阶函数
+          2.若A函数，调用的返回值依然是一个函数，那么A就可以称之为高阶函数。
+          常见的高阶函数： Promise、setTimeout、arr.map()等等
 
-            函数的柯里化：通过函数调用继续返回函数的方式，实现多次接受参数最后统一处理的函数编码形式。
-        */
-        // 创建组件
-        class Login extends React.Component {
+      函数的柯里化：通过函数调用继续返回函数的方式，实现多次接受参数最后统一处理的函数编码形式。
+  */
+  // 创建组件
+  class Login extends React.Component {
 
-            // 初始化状态
-            state = {
-                username: '',
-                password: ''
-            } 
+    // 初始化状态
+    state = {
+      username: '',
+      password: ''
+    }
 
-            // 保存表单数据到状态中
-            saveFormData = (dataType) => {
-                console.log(dataType)
-                return (event) => {
-                    this.setState({[dataType]:event.target.value})
-                }
-            }
+    // 保存表单数据到状态中
+    saveFormData = (dataType) => {
+      console.log(dataType)
+      return (event) => {
+        this.setState({[dataType]: event.target.value})
+      }
+    }
 
-            handleSubmit = (event) => {
-                event.preventDefault();
-                const { username, password } = this.state;
-                alert(username, password)
-            }
-            render() {
-                return (
-                    <form action="http://www.baidu.com" onSubmit={this.handleSubmit}>
-                        用户名：<input onChange={this.saveFormData('username')} type="text" name="username" />
-                        密码：<input onChange={this.saveFormData('password')} type="text" name="password" />
-                        <button>登录</button>
-                    </form>
-                )
-            }
-        }
+    handleSubmit = (event) => {
+      event.preventDefault();
+      const {username, password} = this.state;
+      alert(username, password)
+    }
 
-        // 渲染组件到页面
-        ReactDOM.render(<Login />, document.getElementById('test'))
-    </script>
+    render() {
+      return (
+        <form action="http://www.baidu.com" onSubmit={this.handleSubmit}>
+          用户名：<input onChange={this.saveFormData('username')} type="text" name="username"/>
+          密码：<input onChange={this.saveFormData('password')} type="text" name="password"/>
+          <button>登录</button>
+        </form>
+      )
+    }
+  }
+
+  // 渲染组件到页面
+  ReactDOM.render(<Login/>, document.getElementById('test'))
+</script>
 
 </body>
 
