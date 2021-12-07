@@ -22,6 +22,24 @@
 <script type="text/babel">
 
   // 新版本的react废弃了三个will钩子，新增了两个钩子
+
+  /*
+    1.初始化阶段：由ReactDOM.render()触发---初次渲染
+      1.constructor()
+      2.getDerivedStateFromProps()
+      3.render()
+      4.componentDidMount() =====>常用
+        一般在这个钩子中做一些初始化的事情，例如：开启定时器、发送网络请求、订阅消息
+    2.更新阶段：由组件内部this.setState()或父组件重新render触发
+      1.getDerivedStateFromProps()
+      2.componentWillUpdate()
+      3.render()
+      4.getSnapshotBeforeUpdate()
+      5.componentDidUpdate()
+    3.卸载组件：由ReactDOM.unmountComponentAtNode()触发
+      1.componentWillUnmount()
+        一般这个钩子中做一些收尾的事，例如，关闭定时器、取消订阅消息
+   */
   class Count extends React.Component {
 
     // 构造器
@@ -31,6 +49,7 @@
       // 初始化状态
       this.state = {count: 0}
     }
+
     // 加1按钮的回调
     add = () => {
       // 获取原状态
@@ -46,34 +65,42 @@
     force = () => {
       this.forceUpdate();
     }
-    // 组件将要挂载钩子 mount挂载
-    componentWillMount() {
-      console.log('Count-componentWillMount')
+
+    // 若state的值在任何时刻都取决于props,那么可以使用getDerivedStateFromProps
+    static getDerivedStateFromProps(props, state) {
+      console.log('Count---getDerivedStateFromProps', props, state)
+      return null
     }
+
+    // 在更新之前获取快照
+    getSnapshotBeforeUpdate() {
+      console.log('count---getSnapshotBeforeUpdate')
+      return '快照';
+    }
+
     // 组件挂载完毕的钩子 Did完毕
-    UNSAFE_componentDidMount() {
+    componentDidMount() {
       console.log('Count---componentDidMount')
     }
+
     // 组件将要卸载的钩子
-    componentWillUnmount() {
+    UNSAFE_componentWillUnmount() {
       console.log('Count---componentWillUnmount')
     }
+
     // 控组组件更新的阀门 可以不写，默认返回true 重新的话必须要有返回值
     shouldComponentUpdate() {
       console.log('Count---shouldComponentUpdate')
       return true
     }
-    // 组件将要更新的钩子
-    componentWillUpdate() {
-      console.log('Count---componentWillUpdate')
-    }
+
     // 组件更新完毕的钩子
-    componentDidUpdate() {
-      console.log('Count---componentDidUpdate')
+    componentDidUpdate(preProps, preState, snapshotValue) {
+      console.log('Count---componentDidUpdate', preProps, preState, snapshotValue)
     }
 
     render() {
-      console.log('Count-render')
+      console.log('Count---render')
       const {count} = this.state
       return (
         <div>
@@ -86,40 +113,8 @@
     }
   }
 
-  // 父组件A
-  class A extends React.Component{
-    // 初始化状态
-    state = {carName:'奔驰'}
-    changeCar = () => {
-      this.setState({carName:'奥拓'})
-    }
-    render(){
-      return(
-        <div>
-          <div>我是A组件</div>
-          <button onClick={this.changeCar}>换车</button>
-          <B carName = {this.state.carName}/>
-        </div>
-
-      )
-    }
-  }
-
-  // 父组件B
-  class B extends React.Component{
-    // 组件将要接受新的props的钩子
-    UNSAFE_componentWillReceiveProps(props){
-      console.log('B---componentWillReceiveProps',props)
-    }
-    render(){
-      return(
-        <div>我是B组件，接受到的车是：{this.props.carName}</div>
-      )
-    }
-  }
-
   // 渲染组件到页面
-  ReactDOM.render(<A/>, document.getElementById('test'))
+  ReactDOM.render(<Count count="123"/>, document.getElementById('test'))
 </script>
 
 </body>
