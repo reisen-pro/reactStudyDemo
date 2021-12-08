@@ -5,16 +5,16 @@
      * This source code is licensed under the MIT license found in the
      * LICENSE file in the root directory of this source tree.
      */
-    
+
     'use strict';
-    
+
     if ("development" !== 'production') {
       var invariant = require('fbjs/lib/invariant');
       var warning = require('fbjs/lib/warning');
       var ReactPropTypesSecret = require('./lib/ReactPropTypesSecret');
       var loggedTypeFailures = {};
     }
-    
+
     /**
      * Assert that the values match with the type specs.
      * Error messages are memorized and will only be shown once.
@@ -47,18 +47,18 @@
               // Only monitor this failure once because there tends to be a lot of the
               // same error.
               loggedTypeFailures[error.message] = true;
-    
+
               var stack = getStack ? getStack() : '';
-    
+
               warning(false, 'Failed %s type: %s%s', location, error.message, stack != null ? stack : '');
             }
           }
         }
       }
     }
-    
+
     module.exports = checkPropTypes;
-    
+
     },{"./lib/ReactPropTypesSecret":5,"fbjs/lib/invariant":7,"fbjs/lib/warning":8}],2:[function(require,module,exports){
     /**
      * Copyright (c) 2013-present, Facebook, Inc.
@@ -66,13 +66,13 @@
      * This source code is licensed under the MIT license found in the
      * LICENSE file in the root directory of this source tree.
      */
-    
+
     'use strict';
-    
+
     var emptyFunction = require('fbjs/lib/emptyFunction');
     var invariant = require('fbjs/lib/invariant');
     var ReactPropTypesSecret = require('./lib/ReactPropTypesSecret');
-    
+
     module.exports = function() {
       function shim(props, propName, componentName, location, propFullName, secret) {
         if (secret === ReactPropTypesSecret) {
@@ -100,7 +100,7 @@
         object: shim,
         string: shim,
         symbol: shim,
-    
+
         any: shim,
         arrayOf: getShim,
         element: shim,
@@ -112,13 +112,13 @@
         shape: getShim,
         exact: getShim
       };
-    
+
       ReactPropTypes.checkPropTypes = emptyFunction;
       ReactPropTypes.PropTypes = ReactPropTypes;
-    
+
       return ReactPropTypes;
     };
-    
+
     },{"./lib/ReactPropTypesSecret":5,"fbjs/lib/emptyFunction":6,"fbjs/lib/invariant":7}],3:[function(require,module,exports){
     /**
      * Copyright (c) 2013-present, Facebook, Inc.
@@ -126,22 +126,22 @@
      * This source code is licensed under the MIT license found in the
      * LICENSE file in the root directory of this source tree.
      */
-    
+
     'use strict';
-    
+
     var emptyFunction = require('fbjs/lib/emptyFunction');
     var invariant = require('fbjs/lib/invariant');
     var warning = require('fbjs/lib/warning');
     var assign = require('object-assign');
-    
+
     var ReactPropTypesSecret = require('./lib/ReactPropTypesSecret');
     var checkPropTypes = require('./checkPropTypes');
-    
+
     module.exports = function(isValidElement, throwOnDirectAccess) {
       /* global Symbol */
       var ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
       var FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
-    
+
       /**
        * Returns the iterator method function contained on the iterable object.
        *
@@ -162,7 +162,7 @@
           return iteratorFn;
         }
       }
-    
+
       /**
        * Collection of methods that allow declaration and validation of props that are
        * supplied to React components. Example usage:
@@ -209,9 +209,9 @@
        *
        * @internal
        */
-    
+
       var ANONYMOUS = '<<anonymous>>';
-    
+
       // Important!
       // Keep this list in sync with production version in `./factoryWithThrowingShims.js`.
       var ReactPropTypes = {
@@ -222,7 +222,7 @@
         object: createPrimitiveTypeChecker('object'),
         string: createPrimitiveTypeChecker('string'),
         symbol: createPrimitiveTypeChecker('symbol'),
-    
+
         any: createAnyTypeChecker(),
         arrayOf: createArrayOfTypeChecker,
         element: createElementTypeChecker(),
@@ -234,7 +234,7 @@
         shape: createShapeTypeChecker,
         exact: createStrictShapeTypeChecker,
       };
-    
+
       /**
        * inlined Object.is polyfill to avoid requiring consumers ship their own
        * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
@@ -252,7 +252,7 @@
         }
       }
       /*eslint-enable no-self-compare*/
-    
+
       /**
        * We use an Error-like object for backward compatibility as people may call
        * PropTypes directly and inspect their output. However, we don't use real
@@ -266,7 +266,7 @@
       }
       // Make `instanceof Error` still work for returned errors.
       PropTypeError.prototype = Error.prototype;
-    
+
       function createChainableTypeChecker(validate) {
         if ("development" !== 'production') {
           var manualPropTypeCallCache = {};
@@ -275,7 +275,7 @@
         function checkType(isRequired, props, propName, componentName, location, propFullName, secret) {
           componentName = componentName || ANONYMOUS;
           propFullName = propFullName || propName;
-    
+
           if (secret !== ReactPropTypesSecret) {
             if (throwOnDirectAccess) {
               // New behavior only for users of `prop-types` package
@@ -320,13 +320,13 @@
             return validate(props, propName, componentName, location, propFullName);
           }
         }
-    
+
         var chainedCheckType = checkType.bind(null, false);
         chainedCheckType.isRequired = checkType.bind(null, true);
-    
+
         return chainedCheckType;
       }
-    
+
       function createPrimitiveTypeChecker(expectedType) {
         function validate(props, propName, componentName, location, propFullName, secret) {
           var propValue = props[propName];
@@ -336,18 +336,18 @@
             // check, but we can offer a more precise error message here rather than
             // 'of type `object`'.
             var preciseType = getPreciseType(propValue);
-    
+
             return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + preciseType + '` supplied to `' + componentName + '`, expected ') + ('`' + expectedType + '`.'));
           }
           return null;
         }
         return createChainableTypeChecker(validate);
       }
-    
+
       function createAnyTypeChecker() {
         return createChainableTypeChecker(emptyFunction.thatReturnsNull);
       }
-    
+
       function createArrayOfTypeChecker(typeChecker) {
         function validate(props, propName, componentName, location, propFullName) {
           if (typeof typeChecker !== 'function') {
@@ -368,7 +368,7 @@
         }
         return createChainableTypeChecker(validate);
       }
-    
+
       function createElementTypeChecker() {
         function validate(props, propName, componentName, location, propFullName) {
           var propValue = props[propName];
@@ -380,7 +380,7 @@
         }
         return createChainableTypeChecker(validate);
       }
-    
+
       function createInstanceTypeChecker(expectedClass) {
         function validate(props, propName, componentName, location, propFullName) {
           if (!(props[propName] instanceof expectedClass)) {
@@ -392,13 +392,13 @@
         }
         return createChainableTypeChecker(validate);
       }
-    
+
       function createEnumTypeChecker(expectedValues) {
         if (!Array.isArray(expectedValues)) {
           "development" !== 'production' ? warning(false, 'Invalid argument supplied to oneOf, expected an instance of array.') : void 0;
           return emptyFunction.thatReturnsNull;
         }
-    
+
         function validate(props, propName, componentName, location, propFullName) {
           var propValue = props[propName];
           for (var i = 0; i < expectedValues.length; i++) {
@@ -406,13 +406,13 @@
               return null;
             }
           }
-    
+
           var valuesString = JSON.stringify(expectedValues);
           return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of value `' + propValue + '` ' + ('supplied to `' + componentName + '`, expected one of ' + valuesString + '.'));
         }
         return createChainableTypeChecker(validate);
       }
-    
+
       function createObjectOfTypeChecker(typeChecker) {
         function validate(props, propName, componentName, location, propFullName) {
           if (typeof typeChecker !== 'function') {
@@ -435,13 +435,13 @@
         }
         return createChainableTypeChecker(validate);
       }
-    
+
       function createUnionTypeChecker(arrayOfTypeCheckers) {
         if (!Array.isArray(arrayOfTypeCheckers)) {
           "development" !== 'production' ? warning(false, 'Invalid argument supplied to oneOfType, expected an instance of array.') : void 0;
           return emptyFunction.thatReturnsNull;
         }
-    
+
         for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
           var checker = arrayOfTypeCheckers[i];
           if (typeof checker !== 'function') {
@@ -455,7 +455,7 @@
             return emptyFunction.thatReturnsNull;
           }
         }
-    
+
         function validate(props, propName, componentName, location, propFullName) {
           for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
             var checker = arrayOfTypeCheckers[i];
@@ -463,12 +463,12 @@
               return null;
             }
           }
-    
+
           return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`.'));
         }
         return createChainableTypeChecker(validate);
       }
-    
+
       function createNodeChecker() {
         function validate(props, propName, componentName, location, propFullName) {
           if (!isNode(props[propName])) {
@@ -478,7 +478,7 @@
         }
         return createChainableTypeChecker(validate);
       }
-    
+
       function createShapeTypeChecker(shapeTypes) {
         function validate(props, propName, componentName, location, propFullName) {
           var propValue = props[propName];
@@ -500,7 +500,7 @@
         }
         return createChainableTypeChecker(validate);
       }
-    
+
       function createStrictShapeTypeChecker(shapeTypes) {
         function validate(props, propName, componentName, location, propFullName) {
           var propValue = props[propName];
@@ -527,10 +527,10 @@
           }
           return null;
         }
-    
+
         return createChainableTypeChecker(validate);
       }
-    
+
       function isNode(propValue) {
         switch (typeof propValue) {
           case 'number':
@@ -546,7 +546,7 @@
             if (propValue === null || isValidElement(propValue)) {
               return true;
             }
-    
+
             var iteratorFn = getIteratorFn(propValue);
             if (iteratorFn) {
               var iterator = iteratorFn.call(propValue);
@@ -571,32 +571,32 @@
             } else {
               return false;
             }
-    
+
             return true;
           default:
             return false;
         }
       }
-    
+
       function isSymbol(propType, propValue) {
         // Native Symbol.
         if (propType === 'symbol') {
           return true;
         }
-    
+
         // 19.4.3.5 Symbol.prototype[@@toStringTag] === 'Symbol'
         if (propValue['@@toStringTag'] === 'Symbol') {
           return true;
         }
-    
+
         // Fallback for non-spec compliant Symbols which are polyfilled.
         if (typeof Symbol === 'function' && propValue instanceof Symbol) {
           return true;
         }
-    
+
         return false;
       }
-    
+
       // Equivalent of `typeof` but with special handling for array and regexp.
       function getPropType(propValue) {
         var propType = typeof propValue;
@@ -614,7 +614,7 @@
         }
         return propType;
       }
-    
+
       // This handles more types than `getPropType`. Only used for error messages.
       // See `createPrimitiveTypeChecker`.
       function getPreciseType(propValue) {
@@ -631,7 +631,7 @@
         }
         return propType;
       }
-    
+
       // Returns a string that is postfixed to a warning about an invalid type.
       // For example, "undefined" or "of type array"
       function getPostfixForTypeWarning(value) {
@@ -648,7 +648,7 @@
             return type;
         }
       }
-    
+
       // Returns class name of the object, if any.
       function getClassName(propValue) {
         if (!propValue.constructor || !propValue.constructor.name) {
@@ -656,13 +656,13 @@
         }
         return propValue.constructor.name;
       }
-    
+
       ReactPropTypes.checkPropTypes = checkPropTypes;
       ReactPropTypes.PropTypes = ReactPropTypes;
-    
+
       return ReactPropTypes;
     };
-    
+
     },{"./checkPropTypes":1,"./lib/ReactPropTypesSecret":5,"fbjs/lib/emptyFunction":6,"fbjs/lib/invariant":7,"fbjs/lib/warning":8,"object-assign":9}],4:[function(require,module,exports){
     /**
      * Copyright (c) 2013-present, Facebook, Inc.
@@ -670,19 +670,19 @@
      * This source code is licensed under the MIT license found in the
      * LICENSE file in the root directory of this source tree.
      */
-    
+
     if ("development" !== 'production') {
       var REACT_ELEMENT_TYPE = (typeof Symbol === 'function' &&
         Symbol.for &&
         Symbol.for('react.element')) ||
         0xeac7;
-    
+
       var isValidElement = function(object) {
         return typeof object === 'object' &&
           object !== null &&
           object.$$typeof === REACT_ELEMENT_TYPE;
       };
-    
+
       // By explicitly using `prop-types` you are opting into new development behavior.
       // http://fb.me/prop-types-in-prod
       var throwOnDirectAccess = true;
@@ -692,7 +692,7 @@
       // http://fb.me/prop-types-in-prod
       module.exports = require('./factoryWithThrowingShims')();
     }
-    
+
     },{"./factoryWithThrowingShims":2,"./factoryWithTypeCheckers":3}],5:[function(require,module,exports){
     /**
      * Copyright (c) 2013-present, Facebook, Inc.
@@ -700,16 +700,16 @@
      * This source code is licensed under the MIT license found in the
      * LICENSE file in the root directory of this source tree.
      */
-    
+
     'use strict';
-    
+
     var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
-    
+
     module.exports = ReactPropTypesSecret;
-    
+
     },{}],6:[function(require,module,exports){
     "use strict";
-    
+
     /**
      * Copyright (c) 2013-present, Facebook, Inc.
      * All rights reserved.
@@ -718,22 +718,22 @@
      * LICENSE file in the root directory of this source tree. An additional grant
      * of patent rights can be found in the PATENTS file in the same directory.
      *
-     * 
+     *
      */
-    
+
     function makeEmptyFunction(arg) {
       return function () {
         return arg;
       };
     }
-    
+
     /**
      * This function accepts and discards inputs; it has no side effects. This is
      * primarily useful idiomatically for overridable function endpoints which
      * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
      */
     var emptyFunction = function emptyFunction() {};
-    
+
     emptyFunction.thatReturns = makeEmptyFunction;
     emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
     emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
@@ -744,7 +744,7 @@
     emptyFunction.thatReturnsArgument = function (arg) {
       return arg;
     };
-    
+
     module.exports = emptyFunction;
     },{}],7:[function(require,module,exports){
     /**
@@ -756,9 +756,9 @@
      * of patent rights can be found in the PATENTS file in the same directory.
      *
      */
-    
+
     'use strict';
-    
+
     /**
      * Use invariant() to assert state which your program assumes to be true.
      *
@@ -769,9 +769,9 @@
      * The invariant message will be stripped in production, but the invariant
      * will remain to ensure logic does not differ in production.
      */
-    
+
     var validateFormat = function validateFormat(format) {};
-    
+
     if ("development" !== 'production') {
       validateFormat = function validateFormat(format) {
         if (format === undefined) {
@@ -779,10 +779,10 @@
         }
       };
     }
-    
+
     function invariant(condition, format, a, b, c, d, e, f) {
       validateFormat(format);
-    
+
       if (!condition) {
         var error;
         if (format === undefined) {
@@ -795,12 +795,12 @@
           }));
           error.name = 'Invariant Violation';
         }
-    
+
         error.framesToPop = 1; // we don't care about invariant's own frame
         throw error;
       }
     }
-    
+
     module.exports = invariant;
     },{}],8:[function(require,module,exports){
     /**
@@ -812,27 +812,27 @@
      * of patent rights can be found in the PATENTS file in the same directory.
      *
      */
-    
+
     'use strict';
-    
+
     var emptyFunction = require('./emptyFunction');
-    
+
     /**
      * Similar to invariant but only logs a warning if the condition is not met.
      * This can be used to log issues in development environments in critical
      * paths. Removing the logging code for production environments will keep the
      * same logic and follow the same code paths.
      */
-    
+
     var warning = emptyFunction;
-    
+
     if ("development" !== 'production') {
       (function () {
         var printWarning = function printWarning(format) {
           for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
             args[_key - 1] = arguments[_key];
           }
-    
+
           var argIndex = 0;
           var message = 'Warning: ' + format.replace(/%s/g, function () {
             return args[argIndex++];
@@ -841,33 +841,33 @@
             console.error(message);
           }
           try {
-            // --- Welcome to debugging React ---
+            // --- Index to debugging React ---
             // This error was thrown as a convenience so that you can use this stack
             // to find the callsite that caused this warning to fire.
             throw new Error(message);
           } catch (x) {}
         };
-    
+
         warning = function warning(condition, format) {
           if (format === undefined) {
             throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
           }
-    
+
           if (format.indexOf('Failed Composite propType: ') === 0) {
             return; // Ignore CompositeComponent proptype check.
           }
-    
+
           if (!condition) {
             for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
               args[_key2 - 2] = arguments[_key2];
             }
-    
+
             printWarning.apply(undefined, [format].concat(args));
           }
         };
       })();
     }
-    
+
     module.exports = warning;
     },{"./emptyFunction":6}],9:[function(require,module,exports){
     /*
@@ -875,36 +875,36 @@
     (c) Sindre Sorhus
     @license MIT
     */
-    
+
     'use strict';
     /* eslint-disable no-unused-vars */
     var getOwnPropertySymbols = Object.getOwnPropertySymbols;
     var hasOwnProperty = Object.prototype.hasOwnProperty;
     var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-    
+
     function toObject(val) {
         if (val === null || val === undefined) {
             throw new TypeError('Object.assign cannot be called with null or undefined');
         }
-    
+
         return Object(val);
     }
-    
+
     function shouldUseNative() {
         try {
             if (!Object.assign) {
                 return false;
             }
-    
+
             // Detect buggy property enumeration order in older V8 versions.
-    
+
             // https://bugs.chromium.org/p/v8/issues/detail?id=4118
             var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
             test1[5] = 'de';
             if (Object.getOwnPropertyNames(test1)[0] === '5') {
                 return false;
             }
-    
+
             // https://bugs.chromium.org/p/v8/issues/detail?id=3056
             var test2 = {};
             for (var i = 0; i < 10; i++) {
@@ -916,7 +916,7 @@
             if (order2.join('') !== '0123456789') {
                 return false;
             }
-    
+
             // https://bugs.chromium.org/p/v8/issues/detail?id=3056
             var test3 = {};
             'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
@@ -926,28 +926,28 @@
                     'abcdefghijklmnopqrst') {
                 return false;
             }
-    
+
             return true;
         } catch (err) {
             // We don't expect any of the above to throw, but better to be safe.
             return false;
         }
     }
-    
+
     module.exports = shouldUseNative() ? Object.assign : function (target, source) {
         var from;
         var to = toObject(target);
         var symbols;
-    
+
         for (var s = 1; s < arguments.length; s++) {
             from = Object(arguments[s]);
-    
+
             for (var key in from) {
                 if (hasOwnProperty.call(from, key)) {
                     to[key] = from[key];
                 }
             }
-    
+
             if (getOwnPropertySymbols) {
                 symbols = getOwnPropertySymbols(from);
                 for (var i = 0; i < symbols.length; i++) {
@@ -957,9 +957,9 @@
                 }
             }
         }
-    
+
         return to;
     };
-    
+
     },{}]},{},[4])(4)
     });
