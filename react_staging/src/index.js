@@ -1,14 +1,10 @@
+// 引入react核心库
 import React from 'react';
+// 引入ReactDOM
 import ReactDOM from 'react-dom';
-import './index.css';
+// 引入App
 import App from './App';
-import reportWebVitals from "./reportWebVitals";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+// 渲染
+ReactDOM.render(<App/>, document.getElementById('root'))
 
-reportWebVitals();
