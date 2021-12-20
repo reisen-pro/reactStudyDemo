@@ -82,3 +82,25 @@
 				1.默认使用的是模糊匹配（简单记：【输入的路径】必须包含要【匹配的路径】，且顺序要一致）
 				2.开启严格匹配：<Route exact={true} path="/about" component={About}/>
 				3.严格匹配不要随便开启，需要再开，有些时候开启会导致无法继续匹配二级路由
+
+## 九、Redirect的使用
+				1.一般写在所有路由注册的最下方，当所有路由都无法匹配时，跳转到Redirect指定的路由
+				2.具体编码：
+						<Switch>
+							<Route path="/about" component={About}/>
+							<Route path="/home" component={Home}/>
+							<Redirect to="/about"/>
+						</Switch>
+        注意: v6 移除了 Redirect 组件，改用 Navigate 组件。
+
+## 十、嵌套路由
+				1.注册子路由时要写上父路由的path值
+				2.路由的匹配是按照注册路由的顺序进行的
+        v6中 嵌套路由，父路由地址要加上/* 路由中to和path不需要出现/
+
+## 十一、向路由组件传递参数
+				1.params参数
+							路由链接(携带参数)：<Link to='/demo/test/tom/18'}>详情</Link>
+							注册路由(声明接收)：<Route path="/demo/test/:name/:age" component={Test}/>
+							接收参数：this.props.match.params(v5)
+							接收参数：组件在function定义下，接收useParams()(v6)

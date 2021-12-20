@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Route, Routes} from 'react-router-dom';
+import {Route, Routes,Navigate} from 'react-router-dom';
 import About from "./pages/About"; // Home是路由组件
 import Home from "./pages/Home"; // About是路由组件
 import Header from "./components/Header";
@@ -23,17 +23,20 @@ export default class App extends Component {
 
               {/* 在React中靠路由链接实现切换组件 编写路由链接*/}
               {/* v5中支持 activeClassname = "reisen" */}
-              <MyNavLink to="/about">About</MyNavLink>
-              <MyNavLink to="/home">Home</MyNavLink>
+              <MyNavLink to="about">About</MyNavLink>
+              <MyNavLink to="home/*">Home</MyNavLink>
             </div>
           </div>
           <div className="col-xs-6">
             <div className="panel">
               <div className="panel-body">
                 {/*注册路由*/}
+                {/* 使用Routes替换曾经的Switch */}
                 <Routes>
-                  <Route path="/about" element={<About/>}/>
-                  <Route path="/home" element={<Home/>}/>
+                  <Route path="about" element={<About/>}/>
+                  <Route path="home/*" element={<Home/>}/>
+                  {/* v6 移除了 Redirect 组件，改用 Navigate 组件。 */}
+                  <Route path="*" element={<Navigate to="home"/>}/>
                 </Routes>
               </div>
             </div>
