@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import News from "./News";
 import MyNavLink from "../../components/MyNavLink";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {Message} from "./Message";
+import {News} from "./News";
 
 
 export default class Home extends Component {

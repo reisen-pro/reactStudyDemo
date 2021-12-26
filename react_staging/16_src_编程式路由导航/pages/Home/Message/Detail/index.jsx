@@ -23,8 +23,8 @@ export function Detail() {
   console.log('useLocation:',useLocation());
   console.log('useParams:',useParams());
 
-  const {state} = useLocation();
-  const {id} = state;
+  const {id} = useLocation().state;
+  //const {id} = useParams()
 
   const findResult = DetailData.find((detailObj) => {
     return detailObj.id === id;
